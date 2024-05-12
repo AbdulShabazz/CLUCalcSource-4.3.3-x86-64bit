@@ -8,6 +8,9 @@
 # even the implied warranty of MERCHANTABILITY or FITNESS FOR A
 # PARTICULAR PURPOSE.
 
+# Example
+# $ make -f Makefile.MingW.Win64
+
 # Compiler and flags
 CXX = g++
 CXXFLAGS = -std=c++11 -Wall -Wextra -O2
@@ -40,7 +43,7 @@ all: $(TARGET)
 	$(CXX) $(CXXFLAGS) -c $< -o $@ -I$(INCLUDE_PATH)
 
 # Compile resource file
-$(RES): CLUCalc.rc resource.h CLUCalc.ico
+$(RES): CLUCalc.rc resource.h CLUCalc.ico CLUCalc_v3.rtf
 	$(RC) -i CLUCalc.rc -o $(RES)
 
 # Link object files and resource file
