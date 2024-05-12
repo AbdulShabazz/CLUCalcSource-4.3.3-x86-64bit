@@ -1,0 +1,55 @@
+# Copyright (C) 2024 the Free Software Foundation and github.com/AbdulShabazz
+# This Makefile is free software; the Free Software Foundation et al
+# gives unlimited permission to copy and/or distribute it,
+# with or without modifications, as long as this notice is preserved.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY, to the extent permitted by law; without
+# even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+# PARTICULAR PURPOSE.
+
+# Compiler and flags
+CXX = g++
+CXXFLAGS = -std=c++11 -Wall -Wextra -O2
+
+# Resource compiler
+RC = windres
+
+# Include and library paths
+INCLUDE_PATH = 
+LIBRARY_PATH = 
+
+# Libraries
+LIBS = -lopengl32 -lglu32 -lfltk
+
+# Source files
+SRCS = CLUCalc.cpp CLUOutput.cpp CLUScriptEditor.cpp FLTKEditor.cpp FLTKOutput.cpp OGLWin.cpp StdAfx.cpp
+OBJS = $(SRCS:.cpp=.o)
+
+# Resource file
+RES = CLUCalc.res
+
+# Target executable
+TARGET = CluCalc.exe
+
+# Default target
+all: $(TARGET)
+
+# Compile source files
+%.o: %.cpp
+	$(CXX) $(CXXFLAGS) -c $< -o $@ -I$(INCLUDE_PATH)
+
+# Compile resource file
+$(RES): CLUCalc.rc resource.h CLUCalc.ico
+	$(RC) -i CLUCalc.rc -o $(RES)
+
+# Link object files and resource file
+$(TARGET): $(OBJS) $(RES)
+	$(CXX) $(OBJS) $(RES) -o $(TARGET) -L$(LIBRARY_PATH) $(LIBS)
+
+# Clean generated files
+clean:
+	del $(OBJS) $(RES) $(TARGET)
+
+# Phony targets
+.PHONY: all clean
