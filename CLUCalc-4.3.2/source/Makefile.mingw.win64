@@ -9,7 +9,7 @@
 # PARTICULAR PURPOSE.
 
 # Usage:
-# $ make -f Makefile.MingW.Win64
+# $ make -f Makefile.mingw.win64
 
 # Compiler and flags
 CXX = g++
