@@ -8,7 +8,7 @@
 # even the implied warranty of MERCHANTABILITY or FITNESS FOR A
 # PARTICULAR PURPOSE.
 
-# Example
+# Usage:
 # $ make -f Makefile.MingW.Win64
 
 # Compiler and flags
