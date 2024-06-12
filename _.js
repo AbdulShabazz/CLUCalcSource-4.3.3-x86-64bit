@@ -1,6 +1,8 @@
 try {
     let animationId;
+    let primitives = [];
     let isDragging = false;
+    let spinVector = [0, 0, 0];
     let prevMouseX, prevMouseY;
     let rotationX = 0, rotationY = 0;
     let translationX = 0, translationY = 0;
@@ -17,6 +19,14 @@ try {
     // Event listener for mouse up
     canvas.addEventListener('mouseup', stopDragging);
     canvas.addEventListener('mouseleave', stopDragging);
+    
+    // Event listeners for spin vector controls
+    document.getElementById('spin-vector-x').addEventListener('input', updateSpinVector);
+    document.getElementById('spin-vector-y').addEventListener('input', updateSpinVector);
+    document.getElementById('spin-vector-z').addEventListener('input', updateSpinVector);
+
+    // Event listener for adding a new primitive
+    document.getElementById('add-primitive').addEventListener('click', addPrimitive);
 
     // Function to draw a vector on the canvas
     function drawVector(x1, y1, x2, y2, color) {
@@ -94,6 +104,7 @@ try {
         ctx.translate(canvas.width / 2 + translationX, canvas.height / 2 + translationY);
         ctx.rotate(rotationY);
         ctx.rotate(rotationX);
+        applySpinVectorRotation(spinVector);
       
         // X-axis (Red)
         ctx.beginPath();
@@ -185,6 +196,121 @@ try {
         
         // Request the next animation frame
         animationId = requestAnimationFrame(updateAxis);
+    }
+
+    // Function to apply spin vector rotation
+    function applySpinVectorRotation(spinVector) {
+        const [sx, sy, sz] = spinVector;
+        const angle = Math.sqrt(sx * sx + sy * sy + sz * sz);
+        const sinAngle = Math.sin(angle);
+        const cosAngle = Math.cos(angle);
+
+        const rotationMatrix = [
+            cosAngle + sx * sx * (1 - cosAngle),
+            sx * sy * (1 - cosAngle) - sz * sinAngle,
+            sx * sz * (1 - cosAngle) + sy * sinAngle,
+            sx * sy * (1 - cosAngle) + sz * sinAngle,
+            cosAngle + sy * sy * (1 - cosAngle),
+            sy * sz * (1 - cosAngle) - sx * sinAngle,
+            sx * sz * (1 - cosAngle) - sy * sinAngle,
+            sy * sz * (1 - cosAngle) + sx * sinAngle,
+            cosAngle + sz * sz * (1 - cosAngle)
+        ];
+
+        ctx.transform(
+            rotationMatrix[0], rotationMatrix[1], rotationMatrix[3],
+            rotationMatrix[4], rotationMatrix[6], rotationMatrix[7]
+        );
+    }
+
+    // Function to update the spin vector
+    function updateSpinVector() {
+        spinVector[0] = parseFloat(document.getElementById('spin-vector-x').value);
+        spinVector[1] = parseFloat(document.getElementById('spin-vector-y').value);
+        spinVector[2] = parseFloat(document.getElementById('spin-vector-z').value);
+    }
+
+    // Function to draw primitives
+    function drawPrimitives() {
+        ctx.save();
+        ctx.translate(canvas.width / 2 + translationX, canvas.height / 2 + translationY);
+        ctx.rotate(rotationY);
+        ctx.rotate(rotationX);
+
+        primitives.forEach(primitive => {
+            switch (primitive.type) {
+            case 'line':
+                drawLine(primitive.x1, primitive.y1, primitive.x2, primitive.y2, primitive.color);
+                break;
+            case 'point':
+                drawPoint(primitive.x, primitive.y, primitive.color);
+                break;
+            case 'vector':
+                drawVector(primitive.x1, primitive.y1, primitive.x2, primitive.y2, primitive.color);
+                break;
+            case 'sphere':
+                drawSphere(primitive.x, primitive.y, primitive.radius, primitive.color);
+                break;
+            case 'plane':
+                drawPlane(primitive.x1, primitive.y1, primitive.x2, primitive.y2, primitive.x3, primitive.y3, primitive.color);
+                break;
+            }
+        });
+
+        ctx.restore();
+    }
+    
+    // Function to add a new primitive
+    function addPrimitive() {
+        const primitiveType = document.getElementById('primitive-type').value;
+        const color = document.getElementById('color').value;
+
+        let primitive;
+
+        switch (primitiveType) {
+            case 'line':
+            primitive = {
+                type: 'line',
+                x1: 0, y1: 0,
+                x2: 100, y2: 100,
+                color: color
+            };
+            break;
+            case 'point':
+            primitive = {
+                type: 'point',
+                x: 0, y: 0,
+                color: color
+            };
+            break;
+            case 'vector':
+            primitive = {
+                type: 'vector',
+                x1: 0, y1: 0,
+                x2: 100, y2: 100,
+                color: color
+            };
+            break;
+            case 'sphere':
+            primitive = {
+                type: 'sphere',
+                x: 0, y: 0,
+                radius: 50,
+                color: color
+            };
+            break;
+            case 'plane':
+            primitive = {
+                type: 'plane',
+                x1: -100, y1: -100,
+                x2: 100, y2: -100,
+                x3: 0, y3: 100,
+                color: color
+            };
+            break;
+        }
+
+        primitives.push(primitive);
     }
 
     // Start the animation loop
