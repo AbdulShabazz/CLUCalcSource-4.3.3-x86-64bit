@@ -15,5 +15,3 @@ This repository contains the *original unmodified source* from the archive `CLUC
 - Implements **Geometric Algebra**
 - Visualizes the geometry represented by *multivectors*
 - Rendering via **WebGL** and **LaTeX**
-
-```
