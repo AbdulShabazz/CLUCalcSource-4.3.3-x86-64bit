@@ -2,3 +2,9 @@
 canvas {
     border: 1px solid black;
 }
+.primitives {
+    margin-top: 10px;
+}
+.primitives div {
+    margin-bottom: 5px;
+}
