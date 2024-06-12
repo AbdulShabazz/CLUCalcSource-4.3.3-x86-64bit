@@ -186,10 +186,14 @@ try {
         ctx.clearRect(0, 0, canvas.width, canvas.height);  
 
         // Example usage
+        /*
         drawVector(100, 100, 200, 200, 'red');
         drawPoint(300, 300, 'blue');
         drawLine(400, 100, 600, 300, 'green');
-        drawPlane(500, 400, 700, 400, 600, 500, 'yellow');      
+        drawPlane(500, 400, 700, 400, 600, 500, 'yellow'); 
+        */
+
+        drawPrimitives();  
         
         // Call the drawAxis function to display the XYZ axis
         drawAxis();
@@ -259,7 +263,7 @@ try {
 
         ctx.restore();
     }
-    
+
     // Function to add a new primitive
     function addPrimitive() {
         const primitiveType = document.getElementById('primitive-type').value;
@@ -295,7 +299,7 @@ try {
             primitive = {
                 type: 'sphere',
                 x: 0, y: 0,
-                radius: 50,
+                radius: 0.1,
                 color: color
             };
             break;
