@@ -6,8 +6,41 @@
 </head>
 <body>
   <canvas id="canvas" width="800" height="600"></canvas>
+  <div class="controls">
+    <div>
+      <label for="spin-vector-x">Spin Vector X:</label>
+      <input type="range" id="spin-vector-x" min="-1" max="1" step="0.01" value="0">
+    </div>
+    <div>
+      <label for="spin-vector-y">Spin Vector Y:</label>
+      <input type="range" id="spin-vector-y" min="-1" max="1" step="0.01" value="0">
+    </div>
+    <div>
+      <label for="spin-vector-z">Spin Vector Z:</label>
+      <input type="range" id="spin-vector-z" min="-1" max="1" step="0.01" value="0">
+    </div>
+  </div>
+  <div class="primitives">
+    <div>
+      <label for="primitive-type">Primitive Type:</label>
+      <select id="primitive-type">
+        <option value="line">Line</option>
+        <option value="point">Point</option>
+        <option value="vector">Vector</option>
+        <option value="sphere">Sphere</option>
+        <option value="plane">Plane</option>
+      </select>
+    </div>
+    <div>
+      <label for="color">Color:</label>
+      <input type="color" id="color" value="#000000">
+    </div>
+    <div>
+      <button id="add-primitive">Add Primitive</button>
+    </div>
+  </div>
 <footer>
   <script src="_.js"></script>
-  </footer>
+</footer>
 </body>
 </html>
