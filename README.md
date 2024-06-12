@@ -8,7 +8,7 @@ CLUCalc/CLUViz is a **freely available** software tool for **3D visualizations**
 
 ## Repository Information
 
-This repository contains the *original unmodified source* from the archive `CLUCalcSource-4.3.3.tar.gz` for Linux released in 2005. The purpose of this repository is to make the untouched source code available for cloning and further development in other repositories.
+This repository contains the *non-original modified source* based upon the archive `CLUCalcSource-4.3.3.tar.gz` originally for Linux, released in 2005. The purpose of this repository is to make the untouched source code available in HTML form for cloning and further development in other repositories.
 
 ## Key Features
 
