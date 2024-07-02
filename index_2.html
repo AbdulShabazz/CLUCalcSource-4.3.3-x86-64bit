@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Cube Visualization v1.1</title>
+    <style>
+        body { margin: 0; overflow: hidden; }
+        canvas { display: block; }
+    </style>
+</head>
+<body>
+    <canvas id="cubeCanvas"></canvas>
+    <script>
+        const canvas = document.getElementById('cubeCanvas');
+        const ctx = canvas.getContext('2d');
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const cubeSize = 100;
+        let rotationX = 0;
+        let rotationY = 0;
+        let isDragging = false;
+        let lastMouseX, lastMouseY;
+
+        const vertices = [
+            [-1, -1, -1], [1, -1, -1], [1, 1, -1], [-1, 1, -1],
+            [-1, -1, 1], [1, -1, 1], [1, 1, 1], [-1, 1, 1]
+        ];
+
+        const edges = [
+            [0, 1], [1, 2], [2, 3], [3, 0],
+            [4, 5], [5, 6], [6, 7], [7, 4],
+            [0, 4], [1, 5], [2, 6], [3, 7]
+        ];
+
+        function project(x, y, z) {
+            const focalLength = 300;
+            const scale = focalLength / (focalLength + z);
+            return {
+                x: x * scale + canvas.width / 2,
+                y: y * scale + canvas.height / 2
+            };
+        }
+
+        function drawCube() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.strokeStyle = 'rgba(0, 0, 0, 0.8)';
+            ctx.lineWidth = 2;
+
+            const rotatedVertices = vertices.map(v => rotatePoint(v[0], v[1], v[2]));
+
+            for (let edge of edges) {
+                let p1 = rotatedVertices[edge[0]];
+                let p2 = rotatedVertices[edge[1]];
+
+                let projectedP1 = project(p1.x * cubeSize, p1.y * cubeSize, p1.z * cubeSize);
+                let projectedP2 = project(p2.x * cubeSize, p2.y * cubeSize, p2.z * cubeSize);
+
+                ctx.beginPath();
+                ctx.moveTo(projectedP1.x, projectedP1.y);
+                ctx.lineTo(projectedP2.x, projectedP2.y);
+                ctx.stroke();
+            }
+        }
+
+        function rotatePoint(x, y, z) {
+            let cosX = Math.cos(rotationX);
+            let sinX = Math.sin(rotationX);
+            let cosY = Math.cos(rotationY);
+            let sinY = Math.sin(rotationY);
+
+            let newY = y * cosX - z * sinX;
+            let newZ = y * sinX + z * cosX;
+            let newX = x * cosY + newZ * sinY;
+            newZ = -x * sinY + newZ * cosY;
+
+            return { x: newX, y: newY, z: newZ };
+        }
+
+        function onMouseDown(e) {
+            isDragging = true;
+            lastMouseX = e.clientX;
+            lastMouseY = e.clientY;
+        }
+
+        function onMouseMove(e) {
+            if (isDragging) {
+                let deltaX = e.clientX - lastMouseX;
+                let deltaY = e.clientY - lastMouseY;
+
+                rotationY += deltaX * 0.01;
+                rotationX += deltaY * 0.01;
+
+                drawCube();
+
+                lastMouseX = e.clientX;
+                lastMouseY = e.clientY;
+            }
+        }
+
+        function onMouseUp() {
+            isDragging = false;
+        }
+
+        canvas.addEventListener('mousedown', onMouseDown);
+        canvas.addEventListener('mousemove', onMouseMove);
+        canvas.addEventListener('mouseup', onMouseUp);
+
+        drawCube();
+    </script>
+</body>
+</html>
